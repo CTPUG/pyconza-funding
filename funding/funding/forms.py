@@ -14,3 +14,4 @@ from crispy_forms.layout import Submit, HTML
 from easy_select2.widgets import Select2Multiple
 from markitup.widgets import MarkItUpWidget
 
+from .models import FundingApplication

@@ -12,8 +12,9 @@ from django.utils.translation import ugettext as _
 from reversion import revisions
 from reversion.models import Version
 
-from .models import Application
 from wafer.users.models import UserProfile
+
+from .models import FundingApplication
 
 # Long descriptions of the funding choices for the template
 FUNDING_DESCRIPTIONS = {

@@ -8,7 +8,7 @@ from wafer.talks.models import (ACCEPTED, SUBMITTED, UNDER_CONSIDERATION,
                                 PROVISIONAL)
 
 
-class Application(models.Model):
+class FundingApplication(models.Model):
     """A funding application for PyCon ZA"""
 
     class Meta:
