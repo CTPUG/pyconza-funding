@@ -63,3 +63,26 @@ class FundingTests(TestCase):
 
     def test_total_requested(self):
         """Test that the total requested is updated correctly."""
+        user = create_user('jill')
+
+        application = FundingApplication.objects.create(
+            applicant=user)
+
+        self.assertEqual(application.total_cost, 0)
+        application.other_expenses = 1
+        application.food_amount = 2
+        application.local_transport_amount = 4
+        application.travel_amount = 8
+        application.accomodation_amount = 16
+        application.save()
+        self.assertEqual(application.total_cost, 31)
+        self.assertEqual(application.total_requested, 31)
+        application.own_contribution = 10
+        application.save()
+        self.assertEqual(application.total_cost, 31)
+        self.assertEqual(application.total_requested, 21)
+
+        application.accomodation_amount = 10
+        application.save()
+        self.assertEqual(application.total_cost, 25)
+        self.assertEqual(application.total_requested, 15)
