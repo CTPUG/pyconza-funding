@@ -37,39 +37,39 @@ class Application(models.Model):
                               choices=STATUS_CHOICES,
                               default='S')
 
-    motivation = models.CharField(blank=True,
+    motivation = models.TextField(blank=True,
                                   help_text=_("Your motivation for why PyCon ZA should fund you"))
 
-    country = models.CharField(blank=True,
+    country = models.TextField(blank=True,
                                help_text=_("Which country will you be travelling from?"))
     
-    travel_amount = models.DecimalField(decimal_places=2, default=0,
+    travel_amount = models.DecimalField(decimal_places=2, default=0, max_digits=10,
                                         help_text=_("Total Budget for travel (ZAR)"))
 
-    accomodation_amount = models.DecimalField(decimal_places=2, default=0,
+    accomodation_amount = models.DecimalField(decimal_places=2, default=0, max_digits=10,
                                               help_text=_("Total Budget for accomodation while attending PyCon ZA (ZAR)"))
 
-    food_amount = models.DecimalField(decimal_places=2, default=0,
+    food_amount = models.DecimalField(decimal_places=2, default=0, max_digits=10,
                                         help_text=_("Total Budget for food while attending PyCon ZA (ZAR)"))
 
-    local_transport_amount = models.DecimalField(decimal_places=2, default=0,
+    local_transport_amount = models.DecimalField(decimal_places=2, default=0, max_digits=10,
                                                  help_text=_("Total Budget for local transport"
                                                              " expenses while attending"
                                                              " PyCon ZA (ZAR)"))
 
-    other_expenses = models.DecimalField(decimal_places=2, default=0,
+    other_expenses = models.DecimalField(decimal_places=2, default=0, max_digits=10,
                                           help_text=_("Total Budget for other expenses (ZAR)."
                                                       " Please explain these expenses"
                                                       " in your budget description."))
 
-    own_contribution = models.DecimalField(decimal_places=2, default=0,
+    own_contribution = models.DecimalField(decimal_places=2, default=0, max_digits=10,
                                            help_text=_("Amount you can contribute towards"
                                                        " attending PyCon ZA (ZAR)"))
 
     # The amount offered - only editable by the admin interface
-    offered = models.DecimalField(decimal_places=2, default=0)
+    offered = models.DecimalField(decimal_places=2, default=0, max_digits=10)
 
-    budget_description = models.CharField(blank=True,
+    budget_description = models.TextField(blank=True,
                                           help_text=_("Additional information and explanations"
                                                       " about your budget figures"
                                                       " (assumptions made, special"
@@ -112,16 +112,15 @@ class Application(models.Model):
                 return True
         return False
 
-    @property
     def has_talk(self):
         """True if the user has submitted a talk that has either been accepted or is
            still being considered."""
         if self.applicant.talks.filter(Q(status=SUBMITTED) |
                                        Q(status=UNDER_CONSIDERATION) |
                                        Q(status=PROVISIONAL) |
-                                       Q(status=ACCEPTED))
+                                       Q(status=ACCEPTED)):
             return True
         return False
 
-   has_talk.short_description = _("Has submitted a talk")
-   has_talk.boolean = True
+    has_talk.short_description = _("Has submitted a talk")
+    has_talk.boolean = True
