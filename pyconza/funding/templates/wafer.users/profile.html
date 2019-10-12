@@ -1,14 +1,17 @@
 {% extends "wafer.users/profile.html" %}
+{% load i18n %}
 {% block content %}
-  {% block.super %}
+  {{ block.super }}
   {% comment %}
     Add info on the user's funding application, if any.
     We provide a link to the application, and the status indicator.
     This is appended after main 'wafer-profile' section
   {% endcomment %}
+  {% if object.funding_application %}
   <section class="wafer wafer-funding-status">
-     {% for application in object.applications.all %}
+     {% with object.funding_application as application %}
      <p><a href={{ application.get_absolute_url }}>{% trans "Funding Application" %}</a> - {{ application.get_status_display }}</p>
-     {% endif %}
+     {% endwith %}
   </section>
+  {% endif %}
 {% endblock %}
