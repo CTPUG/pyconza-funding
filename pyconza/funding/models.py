@@ -8,6 +8,16 @@ from wafer.talks.models import (ACCEPTED, SUBMITTED, UNDER_CONSIDERATION,
                                 PROVISIONAL)
 
 
+def get_expr_values(obj, expression):
+    result = 0
+    for expr in expression.get_source_expressions():
+        if hasattr(expr, 'get_source_expressions'):
+            result += get_expr_values(obj, expr)
+        else:
+            result += getattr(obj, expr.name)
+    return result
+
+
 class FundingApplication(models.Model):
     """A funding application for PyCon ZA"""
 
@@ -30,7 +40,7 @@ class FundingApplication(models.Model):
     )
 
     applicant = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                     related_name='funding',
+                                     related_name='funding_application',
                                      on_delete=models.PROTECT)
 
     status = models.CharField(max_length=1,
@@ -77,7 +87,7 @@ class FundingApplication(models.Model):
 
     def sql_total_cost(self):
         """Get the total cost from an sql query for the admin inteface"""
-        return (F('food_amount') + F('local_transport_amount') + F('other_expeneses') +
+        return (F('food_amount') + F('local_transport_amount') + F('other_expenses') +
                 F('accomodation_amount') + F('travel_amount'))
 
     sql_total_cost.short_description = _("Total budget")
@@ -93,10 +103,7 @@ class FundingApplication(models.Model):
         """Total cost as a number, for use elsewhere."""
         # I'm sure this is a terrible way to do this, but it avoids needing to keep
         # multiple lists of fields used to calculate the total in sync
-        result = 0
-        for expr in self.sql_total_cost().get_source_expressions():
-            result += getattr(self, expr.name)
-        return result
+        return get_expr_values(self, self.sql_total_cost())
 
     @property
     def total_requested(self):
