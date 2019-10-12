@@ -27,3 +27,7 @@ FUNDING_DESCRIPTIONS = {
 }
 
 
+# Show the offer for these states
+SHOW_OFFER = ('G', 'A', 'N')
+
+
