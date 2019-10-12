@@ -37,29 +37,29 @@ class FundingTests(TestCase):
         application = FundingApplication.objects.create(
             applicant=user)
 
-        self.assertEqual(application.total_cost, 0)
+        self.assertEqual(application.total_cost(), 0)
         application.other_expenses = 1
         application.save()
-        self.assertEqual(application.total_cost, 1)
+        self.assertEqual(application.total_cost(), 1)
 
         application.food_amount = 2
         application.local_transport_amount = 2
         application.save()
-        self.assertEqual(application.total_cost, 5)
+        self.assertEqual(application.total_cost(), 5)
         application.local_transport_amount = 3
         application.save()
-        self.assertEqual(application.total_cost, 6)
+        self.assertEqual(application.total_cost(), 6)
 
         application.travel_amount = 10
         application.save()
-        self.assertEqual(application.total_cost, 16)
+        self.assertEqual(application.total_cost(), 16)
         application.travel_amount = 5
         application.save()
-        self.assertEqual(application.total_cost, 11)
+        self.assertEqual(application.total_cost(), 11)
 
         application.accomodation_amount = 1
         application.save()
-        self.assertEqual(application.total_cost, 12)
+        self.assertEqual(application.total_cost(), 12)
 
     def test_total_requested(self):
         """Test that the total requested is updated correctly."""
@@ -68,21 +68,21 @@ class FundingTests(TestCase):
         application = FundingApplication.objects.create(
             applicant=user)
 
-        self.assertEqual(application.total_cost, 0)
+        self.assertEqual(application.total_cost(), 0)
         application.other_expenses = 1
         application.food_amount = 2
         application.local_transport_amount = 4
         application.travel_amount = 8
         application.accomodation_amount = 16
         application.save()
-        self.assertEqual(application.total_cost, 31)
-        self.assertEqual(application.total_requested, 31)
+        self.assertEqual(application.total_cost(), 31)
+        self.assertEqual(application.total_requested(), 31)
         application.own_contribution = 10
         application.save()
-        self.assertEqual(application.total_cost, 31)
-        self.assertEqual(application.total_requested, 21)
+        self.assertEqual(application.total_cost(), 31)
+        self.assertEqual(application.total_requested(), 21)
 
         application.accomodation_amount = 10
         application.save()
-        self.assertEqual(application.total_cost, 25)
-        self.assertEqual(application.total_requested, 15)
+        self.assertEqual(application.total_cost(), 25)
+        self.assertEqual(application.total_requested(), 15)

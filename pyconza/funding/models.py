@@ -1,21 +1,11 @@
 from django.db import models
-from django.db.models import F, Q
+from django.db.models import Q
 
 from django.utils.translation import ugettext as _
 from django.conf import settings
 
 from wafer.talks.models import (ACCEPTED, SUBMITTED, UNDER_CONSIDERATION,
                                 PROVISIONAL)
-
-
-def get_expr_values(obj, expression):
-    result = 0
-    for expr in expression.get_source_expressions():
-        if hasattr(expr, 'get_source_expressions'):
-            result += get_expr_values(obj, expr)
-        else:
-            result += getattr(obj, expr.name)
-    return result
 
 
 class FundingApplication(models.Model):
@@ -85,30 +75,19 @@ class FundingApplication(models.Model):
                                                       " (assumptions made, special"
                                                       " considerations, etc.)"))
 
-    def sql_total_cost(self):
-        """Get the total cost from an sql query for the admin inteface"""
-        return (F('food_amount') + F('local_transport_amount') + F('other_expenses') +
-                F('accomodation_amount') + F('travel_amount'))
 
-    sql_total_cost.short_description = _("Total budget")
-
-    def sql_total_requested(self):
-        """The total requested as an SQL Query for the admin interface"""
-        return self.sql_total_cost() - F('own_contribution')
-
-    sql_total_requested.short_description = _("Total funding requested")
-
-    @property
     def total_cost(self):
         """Total cost as a number, for use elsewhere."""
-        # I'm sure this is a terrible way to do this, but it avoids needing to keep
-        # multiple lists of fields used to calculate the total in sync
-        return get_expr_values(self, self.sql_total_cost())
+        return (self.food_amount + self.local_transport_amount + self.other_expenses +
+                self.travel_amount + self.accomodation_amount)
 
-    @property
+    total_cost.short_description = _("Total budget")
+
     def total_requested(self):
-        """Get the total requested as a number, for use elsewhere"""
-        return self.total_cost - self.own_contribution
+        """The total requested"""
+        return self.total_cost() - self.own_contribution
+
+    total_requested.short_description = _("Total funding requested")
 
     def can_edit(self, user):
         if user.has_perm('funding.change_application'):
