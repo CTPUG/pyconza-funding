@@ -13,5 +13,4 @@ conferences.
 This is not a standalone application.
 
 1. Add pyconza-funding to the requirements.txt file of the conference application.
-1. Add funding to the `INSTALLED_APPS`.
-
+1. Add funding to the `INSTALLED_APPS` of your site, before any of the `wafer` applications.
