@@ -5,8 +5,8 @@ Intended to integrate with [wafer](https://github.com/CTPUG/wafer).
 # About
 
 This is a funding application that can be used with wafer. It is fairly minimal
-and somewhat specific to how PyCon ZA handles funding, but can be adapted for
-other conferences.
+and specific to how PyCon ZA handles funding, but can be adapted for other
+conferences.
 
 # Installing
 
