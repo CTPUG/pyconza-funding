@@ -11,6 +11,7 @@ class Command(BaseCommand):
         group_name = "Funding Group"
         group_perms = (('funding', 'add_application'),
                        ('funding', 'view_all_applications'))
+                       ('funding', 'make_application_decisions'))
                        ('funding', 'change_application'))
 
         group, created = Group.objects.all().get_or_create(name=group_name)
