@@ -90,12 +90,26 @@ class FundingApplication(models.Model):
     total_requested.short_description = _("Total funding requested")
 
     def can_edit(self, user):
-        if user.has_perm('funding.change_application'):
+        """Can the user edit this application?"""
+        if user.has_perm('funding.make_application_decisions'):
+            # Funding manager can update things later, if required
             return True
         # Applicants can only edit the talk while it's in the initial submission state
-        if self.status == 'submitted':
+        if self.status == 'S':
             if self.applicant == user:
                 return True
+        return False
+
+    def can_view(self, user):
+        """Can the user view the application?"""
+        if self.applicant == user:
+            return True
+        elif user.has_perm('funding.view_all_applications'):
+            # Fundihg commitee
+            return True
+        elif user.has_perm('funding.make_application_decisions'):
+            # Fundihg manager - should have the view permissions, but just in case
+            return True
         return False
 
     def has_talk(self):
@@ -108,13 +122,12 @@ class FundingApplication(models.Model):
             return True
         return False
 
+    has_talk.short_description = _("Has submitted a talk")
+    has_talk.boolean = True
+
     def get_user_fullname(self):
         """return the full name for the admin interface"""
         return self.applicant.userprofile.display_name()
 
     get_user_fullname.short_description = 'User'
     get_user_fullname.admin_order_field = 'applicant__id'
-
-
-    has_talk.short_description = _("Has submitted a talk")
-    has_talk.boolean = True
