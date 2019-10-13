@@ -108,5 +108,13 @@ class FundingApplication(models.Model):
             return True
         return False
 
+    def get_user_fullname(self):
+        """return the full name for the admin interface"""
+        return self.applicant.userprofile.display_name()
+
+    get_user_fullname.short_description = 'User'
+    get_user_fullname.admin_order_field = 'applicant__id'
+
+
     has_talk.short_description = _("Has submitted a talk")
     has_talk.boolean = True
