@@ -3,7 +3,7 @@ PyConZA Funding application form
 
 Intended to integrate with `wafer`_.
 
-.. _wavfer: https://github.com/CTPUG/wafer
+.. _wafer: https://github.com/CTPUG/wafer
 
 About
 =====
