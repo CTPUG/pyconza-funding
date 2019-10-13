@@ -70,6 +70,14 @@ class FundingApplicationCreate(LoginRequiredMixin, CreateView):
     template_name = 'pyconza.funding/application_form.html'
     form_class = FundingApplicationForm
 
+    def get_context_data(self, **kwargs):
+        context = super(FundingApplicationCreate, self).get_context_data(**kwargs)
+
+        context['can_edit'] = True
+        context['can_submit'] = True
+
+        return context
+
     @revisions.create_revision()
     def form_valid(self, form):
         # Eaaargh we have to do the work of CreateView if we want to set values
