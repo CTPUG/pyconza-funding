@@ -53,7 +53,11 @@
   {% else %}
     <h1>{% trans "Funding Application Submission" %}</h1>
   {% endif %}
-  {% if not can_edit and not can_submit %}
+  {% if new_application and application %}
+    {% blocktrans with application.get_absolute_url as app_url %}
+      <em>You have already submitted an application. See <a href="{{ app_url }}">the application status</a>.</em>
+    {% endblocktrans %}
+  {% elif not can_edit and not can_submit %}
     {% blocktrans %}
       <em>Funding Application submission is closed</em>
     {% endblocktrans %}

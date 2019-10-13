@@ -1,0 +1,12 @@
+{% extends "wafer/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static from staticfiles %}
+{% block title %}Funding Application - {{ WAFER_CONFERENCE_NAME }}{% endblock %}
+{% block content %}
+<section class="wafer wafer-funding-application">
+  <h1>Funding Application</h1>
+  <p>{% trans "Submitted by" %}{{ application.applicant.userprofile.get_display_name }}</p>
+</section>
+{% endblock %}
+

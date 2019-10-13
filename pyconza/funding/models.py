@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.core import validators
+from django.urls import reverse
 
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -138,3 +139,8 @@ class FundingApplication(models.Model):
 
     get_user_fullname.short_description = 'User'
     get_user_fullname.admin_order_field = 'applicant__id'
+
+    def get_absolute_url(self):
+        return reverse('funding_application', kwargs={
+            'pk': self.pk,
+        })

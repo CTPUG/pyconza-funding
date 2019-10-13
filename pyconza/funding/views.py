@@ -73,8 +73,12 @@ class FundingApplicationCreate(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super(FundingApplicationCreate, self).get_context_data(**kwargs)
 
-        context['can_edit'] = True
+        context['can_edit'] = False
         context['can_submit'] = True
+        context['new_application'] = True
+        context['application'] = None
+        if hasattr(self.request.user, 'funding_application'):
+            context['application'] = self.request.user.funding_application
 
         return context
 
@@ -98,6 +102,11 @@ class FundingApplicationUpdate(EditOwnApplicationMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(FundingApplicationUpdate, self).get_context_data(**kwargs)
         context['can_edit'] = self.object.can_edit(self.request.user)
+        context['can_submit'] = False
+        context['new_application'] = False
+        context['application'] = None
+        if hasattr(self.request.user, 'funding_application'):
+            context['application'] = self.request.user.funding_application
         return context
 
     @revisions.create_revision()
