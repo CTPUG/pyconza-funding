@@ -53,7 +53,7 @@ class FundingApplicationForm(forms.ModelForm):
                 HTML('<p>Total Budget: <strong class="%s_total">R </strong></p>' % BUDGET_CLASS),
                 'budget_description',
             ),
-            Field('own_contribution', css_class=REQUEST_CLASS, onblur="updateRequestedTotal"),
+            Field('own_contribution', css_class=REQUEST_CLASS, onblur="updateRequestedTotal()"),
             HTML('<p>Total Requested: <strong class="%s_total">R </strong></p>' % REQUEST_CLASS),
         )
         instance = kwargs['instance']

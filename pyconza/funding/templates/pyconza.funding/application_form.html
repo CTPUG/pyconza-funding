@@ -5,29 +5,38 @@
 {% block extra_head %}
 {{ block.super }}
    <script type="text/javascript" language="Javascript">
-      function updateTotal() {
-        var total = 0;
-         console.log('here');
-        items =  document.getElementsByClassName("budget");
-        target = document.getElementsByClassName("budget_total");
-         console.log(items);
-         console.log(target);
-        for (var i=0;i<items.length;i++) {
+      function calcTotal() {
+         var total = 0;
+         items =  document.getElementsByClassName("budget");
+         for (var i=0;i<items.length;i++) {
             var val = parseFloat(items[i].value,10);
-           console.log(items[i]);
-           console.log(val);
             total+=(isNaN(val))?0:val;
-        }
-        target[0].innerHTML = "R " + String(total);
-         console.log(target);
-         console.log(total);
+         }
          return total;
       }
 
+      function updateTotal() {
+         var total = calcTotal();
+         target = document.getElementsByClassName("budget_total");
+         target[0].innerHTML = "R " + String(total);
+         // Also ensure the requested total is accurate as we change stuff
+         updateRequestedTotal();
+      }
+
+      function calcRequested() {
+         var requested = calcTotal();
+         items = document.getElementsByClassName("request");
+         for (var i=0;i<items.length;i++) {
+            var val = parseFloat(items[i].value,10);
+            requested-=(isNaN(val))?0:val;
+         }
+         return requested;
+      }
+
       function updateRequestedTotal() {
-         var requested = 0;
-        items =  document.getElementsByClassName("request");
-        target = document.getElementsByClassName("request_total");
+         var requested = calcRequested();
+         target = document.getElementsByClassName("request_total");
+         target[0].innerHTML = "R " + String(requested);
       }
    </script>
 {% endblock %}
