@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Q
+from django.core import validators
 
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -44,25 +45,31 @@ class FundingApplication(models.Model):
                                help_text=_("Which country will you be travelling from?"))
     
     travel_amount = models.DecimalField(decimal_places=2, default=0, max_digits=10,
+                                        validators=[validators.MinValueValidator(0)],
                                         help_text=_("Total Budget for travel (ZAR)"))
 
     accomodation_amount = models.DecimalField(decimal_places=2, default=0, max_digits=10,
+                                              validators=[validators.MinValueValidator(0)],
                                               help_text=_("Total Budget for accomodation while attending PyCon ZA (ZAR)"))
 
     food_amount = models.DecimalField(decimal_places=2, default=0, max_digits=10,
-                                        help_text=_("Total Budget for food while attending PyCon ZA (ZAR)"))
+                                      validators=[validators.MinValueValidator(0)],
+                                       help_text=_("Total Budget for food while attending PyCon ZA (ZAR)"))
 
     local_transport_amount = models.DecimalField(decimal_places=2, default=0, max_digits=10,
+                                                 validators=[validators.MinValueValidator(0)],
                                                  help_text=_("Total Budget for local transport"
                                                              " expenses while attending"
                                                              " PyCon ZA (ZAR)"))
 
     other_expenses = models.DecimalField(decimal_places=2, default=0, max_digits=10,
-                                          help_text=_("Total Budget for other expenses (ZAR)."
-                                                      " Please explain these expenses"
-                                                      " in your budget description."))
+                                         validators=[validators.MinValueValidator(0)],
+                                         help_text=_("Total Budget for other expenses (ZAR)."
+                                                     " Please explain these expenses"
+                                                     " in your budget description."))
 
     own_contribution = models.DecimalField(decimal_places=2, default=0, max_digits=10,
+                                           validators=[validators.MinValueValidator(0)],
                                            help_text=_("Amount you can contribute towards"
                                                        " attending PyCon ZA (ZAR)"))
 
