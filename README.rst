@@ -3,7 +3,7 @@ PyConZA Funding application form
 
 Intended to integrate with `wafer`_.
 
-.. _wavfer: (https://github.com/CTPUG/wafer).
+.. _wavfer: https://github.com/CTPUG/wafer
 
 About
 =====
@@ -18,4 +18,4 @@ Installing
 This is not a standalone application, but intended to extend wafer.
 
 1. Add pyconza-funding to the requirements.txt file of the conference application.
-2. Add funding to the ``INSTALLED_APPS`` of your site, before any of the ``wafer`` applications.
+2. Add ``pyconza.funding`` to the ``INSTALLED_APPS`` of your site, before any of the ``wafer`` applications.
