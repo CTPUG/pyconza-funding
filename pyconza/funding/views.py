@@ -63,6 +63,20 @@ class FundingApplicationView(DetailView):
         context['can_edit'] = application.can_edit(user)
         context['application'] = application
 
+        context['budget'] = []
+        context['requested'] = []
+
+        context['budget'].append({'name': _('Travel to Conference'), 'value': application.travel_amount})
+        context['budget'].append({'name': _('Accomodation'), 'value': application.accomodation_amount})
+        context['budget'].append({'name': _('Local Transport'), 'value': application.local_transport_amount})
+        context['budget'].append({'name': _('Food'), 'value': application.food_amount})
+        context['budget'].append({'name': _('Other'), 'value': application.other_expenses})
+        context['budget'].append({'name': _('Total Budget'), 'value': application.total_cost()})
+
+        context['requested'].append({'name': _('Total Budget'), 'value': application.total_cost()})
+        context['requested'].append({'name': _('Own Contribution'), 'value': application.own_contribution})
+        context['requested'].append({'name': _('Total Requested'), 'value': application.total_requested()})
+
         return context
 
 

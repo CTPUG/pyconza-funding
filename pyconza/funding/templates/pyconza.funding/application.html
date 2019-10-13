@@ -7,6 +7,24 @@
 <section class="wafer wafer-funding-application">
   <h1>Funding Application</h1>
   <p>{% trans "Submitter: " %}{{ application.applicant.userprofile.display_name }}</p>
+  <p><strong>{% trans "Status: " %}</strong>{{ status_description }}</p>
+  <p>{% trans "Budget" %}</p>
+  <table cellspacing=1 cellpadding=0>
+     <tr><th>{% trans "Item" %}</th><th>{% trans "Value" %}</th></tr>
+     {% for item in budget %}
+        <tr><td>{{ item.name }}</td><td>{{ item.value }}</td>
+     {% endfor %}
+  </table>
+  <p>{% trans "Funding Requested" %}</p>
+  <table cellspacing=1 cellpadding=0>
+     <tr><th>{% trans "Item" %}</th><th>{% trans "Value" %}</th></tr>
+     {% for item in requested %}
+        <tr><td>{{ item.name }}</td><td>{{ item.value }}</td>
+     {% endfor %}
+  </table>
+  {% if show_offer %}
+  <p><strong>{% trans "Offered: " %}</strong>{{ application.offered }}</p>
+  {% endif %}
 </section>
 {% endblock %}
 
