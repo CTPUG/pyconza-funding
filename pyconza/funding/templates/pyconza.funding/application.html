@@ -6,7 +6,7 @@
 {% block content %}
 <section class="wafer wafer-funding-application">
   <h1>Funding Application</h1>
-  <p>{% trans "Submitted by" %}{{ application.applicant.userprofile.get_display_name }}</p>
+  <p>{% trans "Submitter: " %}{{ application.applicant.userprofile.display_name }}</p>
 </section>
 {% endblock %}
 

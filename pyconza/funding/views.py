@@ -61,6 +61,7 @@ class FundingApplicationView(DetailView):
         context['show_offer'] = application.status in SHOW_OFFER
         context['status_description'] = FUNDING_DESCRIPTIONS[application.status]
         context['can_edit'] = application.can_edit(user)
+        context['application'] = application
 
         return context
 
@@ -104,9 +105,7 @@ class FundingApplicationUpdate(EditOwnApplicationMixin, UpdateView):
         context['can_edit'] = self.object.can_edit(self.request.user)
         context['can_submit'] = False
         context['new_application'] = False
-        context['application'] = None
-        if hasattr(self.request.user, 'funding_application'):
-            context['application'] = self.request.user.funding_application
+        context['application'] = self.object
         return context
 
     @revisions.create_revision()
