@@ -2,6 +2,35 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 {% load static from staticfiles %}
+{% block extra_head %}
+{{ block.super }}
+   <script type="text/javascript" language="Javascript">
+      function updateTotal() {
+        var total = 0;
+         console.log('here');
+        items =  document.getElementsByClassName("budget");
+        target = document.getElementsByClassName("budget_total");
+         console.log(items);
+         console.log(target);
+        for (var i=0;i<items.length;i++) {
+            var val = parseFloat(items[i].value,10);
+           console.log(items[i]);
+           console.log(val);
+            total+=(isNaN(val))?0:val;
+        }
+        target[0].innerHTML = "R " + String(total);
+         console.log(target);
+         console.log(total);
+         return total;
+      }
+
+      function updateRequestedTotal() {
+         var requested = 0;
+        items =  document.getElementsByClassName("request");
+        target = document.getElementsByClassName("request_total");
+      }
+   </script>
+{% endblock %}
 {% block content %}
 <section class="wafer wafer-funding-edit">
   {% if can_edit %}
