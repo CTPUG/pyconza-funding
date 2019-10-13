@@ -19,3 +19,4 @@ This is not a standalone application, but intended to extend wafer.
 
 1. Add pyconza-funding to the requirements.txt file of the conference application.
 2. Add ``pyconza.funding`` to the ``INSTALLED_APPS`` of your site, before any of the ``wafer`` applications.
+3. Add ``pyconza.funding.urls`` to the ``urls.py`` of your site. By default, funding lives under ``/funding/`` .
