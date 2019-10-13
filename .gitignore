@@ -110,3 +110,6 @@ localstatic/
 localmedia/
 localsettings.py
 *uwsgi*
+
+# Testing databases, etc.
+*.db
