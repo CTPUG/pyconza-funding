@@ -30,7 +30,7 @@ class FundingApplicationForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(FundingForm, self).__init__(*args, **kwargs)
+        super(FundingApplicationForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
         self.helper.include_media = False

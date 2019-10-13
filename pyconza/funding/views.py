@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic.edit import DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from django.utils.translation import ugettext as _
 
 from reversion import revisions
@@ -23,7 +23,7 @@ FUNDING_DESCRIPTIONS = {
     'U': _('This request has been finalised and is under consideration by the committee.'),
     'G': _('This funding request has been granted and is waiting for your decision on accepting the offer'),
     'A': _('This funding offer has been accepted'),
-    'R': _('The committee has not granted this funding request')
+    'R': _('The committee has not granted this funding request'),
     'N': _('The funding offer was not accepted'),
     'C': _('This funding request has been canceled'),
 }
@@ -35,7 +35,7 @@ SHOW_OFFER = ('G', 'A', 'N')
 class EditOwnApplicationMixin(object):
     """Users can edit their own application long as it is in the 'Submitted' state"""
     def get_object(self, *args, **kwargs):
-        object_ = super(EditOwnTalksMixin, self).get_object(*args, **kwargs)
+        object_ = super(EditOwnApplicationMixin, self).get_object(*args, **kwargs)
         if object_.can_edit(self.request.user):
             return object_
         else:
@@ -48,13 +48,13 @@ class FundingApplicationView(DetailView):
 
     def get_object(self, *args, **kwargs):
         '''Only owners and funding committee can see applications'''
-        object_ = super(FundingApplicationiew, self).get_object(*args, **kwargs)
+        object_ = super(FundingApplicationView, self).get_object(*args, **kwargs)
         if not object_.can_view(self.request.user):
             raise PermissionDenied
         return object_
 
     def get_context_data(self, **kwargs):
-        context = super(FundingApplicationViewView, self).get_context_data(**kwargs)
+        context = super(FundingApplicationView, self).get_context_data(**kwargs)
         application = self.object
         user = self.request.user
 
@@ -82,7 +82,7 @@ class FundingApplicationCreate(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class FundingApplicationUpdate(EditOwnTalksMixin, UpdateView):
+class FundingApplicationUpdate(EditOwnApplicationMixin, UpdateView):
     model = FundingApplication
     template_name = 'pyconza.funding/application_form.html'
     form_class = FundingApplicationForm
@@ -99,7 +99,7 @@ class FundingApplicationUpdate(EditOwnTalksMixin, UpdateView):
         return super(FundingApplicationUpdate, self).form_valid(form)
 
 
-class FundingApplicationCancel(EditOwnTalksMixin, DeleteView):
+class FundingApplicationCancel(EditOwnApplicationMixin, DeleteView):
     model = FundingApplication
     template_name = 'pyconza.funding/cancel_application.html'
     success_url = reverse_lazy('wafer_page')
