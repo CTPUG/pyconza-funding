@@ -1,0 +1,30 @@
+{% extends 'wafer/base_form.html' %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static from staticfiles %}
+{% block content %}
+<section class="wafer wafer-funding-edit">
+  {% if can_edit %}
+    <h1>{% trans "Update Application" %}</h1>
+    {% with application_name=object.applicant.userprofile.display_name %}
+      {% url 'wafer_user_profile' username=object.applicant.username as applicant_url %}
+      {% blocktrans %}
+        <p>Submitted by <a href="{{ applicant_url }}">{{ applicant_name }}</a>.</p>
+      {% endblocktrans %}
+    {% endwith %}
+  {% else %}
+    <h1>{% trans "Funding Application Submission" %}</h1>
+  {% endif %}
+  {% if not can_edit and not can_submit %}
+    {% blocktrans %}
+      <em>Funding Application submission is closed</em>
+    {% endblocktrans %}
+  {% else %}
+    {% crispy form %}
+  {% endif %}
+</section>
+{% endblock %}
+{% block extra_foot %}
+{{ block.super }}
+<script type="text/javascript" src="{% static 'js/markitup.js' %}"></script>
+{% endblock %}
