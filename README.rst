@@ -12,6 +12,11 @@ This is a funding application that can be used with wafer. It is fairly minimal
 and specific to how PyCon ZA handles funding, but can be adapted for other
 conferences.
 
+This is intended to automate the data related parts of the application - gathering
+budgets, making offers and recording delegates decisions on whether to accept funding
+offers. It is not intended to handle the decision making process, nor does it handle
+the communictation between applicants and the funding committee.
+
 Installing
 ==========
 
