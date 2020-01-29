@@ -102,7 +102,7 @@ class FundingApplication(models.Model):
         if user.has_perm('funding.make_application_decisions'):
             # Funding manager can update things later, if required
             return True
-        # Applicants can only edit the talk while it's in the initial submission state
+        # Applicants can only edit the application while it's in the initial submission state
         if self.status == 'S':
             if self.applicant == user:
                 return True
@@ -118,6 +118,17 @@ class FundingApplication(models.Model):
         elif user.has_perm('funding.make_application_decisions'):
             # Fundihg manager - should have the view permissions, but just in case
             return True
+        return False
+
+    def can_accept(self, user):
+        """Can the user accept or reject this application?"""
+        if user.has_perm('funding.make_application_decisions'):
+            # Funding manager can update things later, if required
+            return True
+        # Applicants can only decide on granted applications
+        if self.status == 'G':
+            if self.applicant == user:
+                return True
         return False
 
     def has_talk(self):
