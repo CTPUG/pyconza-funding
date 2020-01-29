@@ -11,4 +11,10 @@ urlpatterns = [
         name='funding_application'),
     url(r'^(?P<pk>\d+)/edit/$', FundingApplicationUpdate.as_view(),
         name='funding_application_edit'),
+    url(r'^(?P<pk>\d+)/cancel/$', FundingApplicationCancel.as_view(),
+        name='funding_application_cancel'),
+    url(r'^(?P<pk>\d+)/accept/$', FundingApplicationAccept.as_view(),
+        name='funding_application_accept'),
+    url(r'^(?P<pk>\d+)/reject/$', FundingApplicationReject.as_view(),
+        name='funding_application_reject'),
 ]
