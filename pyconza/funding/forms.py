@@ -63,7 +63,7 @@ class FundingApplicationForm(forms.ModelForm):
                 FormActions(
                     submit_button,
                     HTML('<a href="%s" class="btn btn-danger">%s</a>'
-                         % (reverse('pyconza_funding_withdraw', args=(instance.pk,)),
+                         % (reverse('funding_application_cancel', args=(instance.pk,)),
                             _('Withdraw Application')))))
         else:
             self.helper.add_input(submit_button)
