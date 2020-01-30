@@ -10,9 +10,10 @@ class Command(BaseCommand):
     def add_funding_group(self):
         group_name = "Funding Group"
         group_perms = (('funding', 'add_application'),
-                       ('funding', 'view_all_applications'))
-                       ('funding', 'make_application_decisions'))
-                       ('funding', 'change_application'))
+                       ('funding', 'view_all_applications'),
+                       ('funding', 'make_application_decisions'),
+                       ('funding', 'change_application'),
+                      )
 
         group, created = Group.objects.all().get_or_create(name=group_name)
         if not created:
@@ -33,6 +34,6 @@ class Command(BaseCommand):
                 group.permissions.add(perm)
         group.save()
 
-    def handle(self, *args, *options):
+    def handle(self, *args, **options):
         self.add_funding_group()
 
