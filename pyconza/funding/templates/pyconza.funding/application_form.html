@@ -18,7 +18,7 @@
       function updateTotal() {
          var total = calcTotal();
          target = document.getElementsByClassName("budget_total");
-         target[0].innerHTML = "R " + String(total);
+         target[0].innerHTML = "R " + total.toFixed(2);
          // Also ensure the requested total is accurate as we change stuff
          updateRequestedTotal();
       }
@@ -36,7 +36,7 @@
       function updateRequestedTotal() {
          var requested = calcRequested();
          target = document.getElementsByClassName("request_total");
-         target[0].innerHTML = "R " + String(requested);
+         target[0].innerHTML = "R " + requested.toFixed(2);
       }
    </script>
 {% endblock %}
