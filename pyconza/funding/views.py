@@ -156,7 +156,7 @@ class FundingApplicationCancel(EditOwnApplicationMixin, DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
-class FundingApplicationAccept(AcceptRejectOwnApplicationMixin, UpdateView):
+class FundingApplicationAccept(AcceptRejectApplicationMixin, UpdateView):
     model = FundingApplication
     template_name = 'pyconza.funding/accept_application.html'
 
@@ -171,7 +171,7 @@ class FundingApplicationAccept(AcceptRejectOwnApplicationMixin, UpdateView):
     #    return HttpResponseRedirect(self.success_url)
 
 
-class FundingApplicationReject(AcceptRejectOwnApplicationMixin, UpdateView):
+class FundingApplicationReject(AcceptRejectApplicationMixin, UpdateView):
     model = FundingApplication
     template_name = 'pyconza.funding/reject_application.html'
 

@@ -2,7 +2,8 @@ from django.conf.urls import url, include
 from rest_framework_extensions import routers
 
 from .views import (
-        FundingApplicationView, FundingApplicationCreate, FundingApplicationUpdate
+        FundingApplicationView, FundingApplicationCreate, FundingApplicationUpdate,
+        FundingApplicationCancel, FundingApplicationAccept, FundingApplicationReject,
     )
 
 urlpatterns = [
