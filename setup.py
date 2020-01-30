@@ -11,7 +11,7 @@ with open('README.rst', 'r') as f:
 
 setup(
     name="pyconza_funding",
-    version="0.9,1",
+    version="0.1.0",
     url='http://github.com/CTPUG/pyconza-funding',
     license='ISC',
     description="A Funding application for PyCon ZA for use with wafer.",
