@@ -42,6 +42,16 @@ class EditOwnApplicationMixin(object):
             raise PermissionDenied
 
 
+class AcceptRejectApplicationMixin(object):
+    """Users can edit their own application long as it is in the 'Submitted' state"""
+    def get_object(self, *args, **kwargs):
+        object_ = super(AcceptRejectApplicationMixin, self).get_object(*args, **kwargs)
+        if object_.can_accept(self.request.user):
+            return object_
+        else:
+            raise PermissionDenied
+
+
 class FundingApplicationView(DetailView):
     template_name = 'pyconza.funding/application.html'
     model = FundingApplication
@@ -61,6 +71,7 @@ class FundingApplicationView(DetailView):
         context['show_offer'] = application.status in SHOW_OFFER
         context['status_description'] = FUNDING_DESCRIPTIONS[application.status]
         context['can_edit'] = application.can_edit(user)
+        context['can_accept'] = application.can_accept(user)
         context['application'] = application
 
         context['budget'] = []
@@ -132,7 +143,7 @@ class FundingApplicationUpdate(EditOwnApplicationMixin, UpdateView):
 class FundingApplicationCancel(EditOwnApplicationMixin, DeleteView):
     model = FundingApplication
     template_name = 'pyconza.funding/cancel_application.html'
-    success_url = reverse_lazy('wafer_page')
+    success_url = reverse_lazy('wafer_user_profile')
 
     @revisions.create_revision()
     def delete(self, request, *args, **kwargs):
@@ -143,3 +154,33 @@ class FundingApplicationCancel(EditOwnApplicationMixin, DeleteView):
         revisions.set_user(self.request.user)
         revisions.set_comment("Funding Application Cancelled")
         return HttpResponseRedirect(self.success_url)
+
+
+class FundingApplicationAccept(AcceptRejectOwnApplicationMixin, UpdateView):
+    model = FundingApplication
+    template_name = 'pyconza.funding/accept_application.html'
+
+    #@revisions.create_revision()
+    #def delete(self, request, *args, **kwargs):
+    #    """Override delete to only cancel"""
+    #    application = self.get_object()
+    #    application.status = 'C'
+    #    application.save()
+    #    revisions.set_user(self.request.user)
+    #    revisions.set_comment("Funding Application Cancelled")
+    #    return HttpResponseRedirect(self.success_url)
+
+
+class FundingApplicationReject(AcceptRejectOwnApplicationMixin, UpdateView):
+    model = FundingApplication
+    template_name = 'pyconza.funding/reject_application.html'
+
+    #@revisions.create_revision()
+    #def delete(self, request, *args, **kwargs):
+    #    """Override delete to only cancel"""
+    #    application = self.get_object()
+    #    application.status = 'C'
+    #    application.save()
+    #    revisions.set_user(self.request.user)
+    #    revisions.set_comment("Funding Application Cancelled")
+    #    return HttpResponseRedirect(self.success_url)
