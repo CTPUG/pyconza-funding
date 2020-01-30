@@ -2,28 +2,57 @@
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
 from django.urls import reverse
 
 from wafer.tests.api_utils import SortedResultsClient
-from wafer.talks.models import (
-    Talk, TalkUrl, ACCEPTED, REJECTED, SUBMITTED, UNDER_CONSIDERATION,
-    CANCELLED, PROVISIONAL)
+
+from pyconza.funding.models import FundingApplication
+
+def create_user(username, superuser=False, perms=()):
+    if superuser:
+        create = get_user_model().objects.create_superuser
+    else:
+        create = get_user_model().objects.create_user
+    user = create(
+        username, '%s@example.com' % username, '%s_password' % username)
+    for codename in perms:
+        perm = Permission.objects.get(codename=codename)
+        user.user_permissions.add(perm)
+    if perms:
+        user = get_user_model().objects.get(pk=user.pk)
+    return user
+
+def create_application(user, status):
+    """Create an application with the given status"""
+    application = FundingApplication.objects.create(applicant=user)
+    application.status = status
+    application.save()
+    return application
 
 
-def create_user_with_funding(username, superuser=False, perms=()):
-    pass
-
-
+@override_settings(
+    ROOT_URLCONF='pyconza.funding.tests.urls',
+)
 class FundingViewTests(TestCase):
     def setUp(self):
+        self.test_user = create_user('test', False)
+        self.perm_user = create_user('perm_user', False, ())
+        self.admin_user = create_user('admin', True)
+        self.no_app_user = create_user('no application', False)
+        self.def_app = create_application(self.test_user, 'U')
         self.client = Client()
 
     def test_not_logged_in(self):
         """Test that unauthenticated users can't see anything"""
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.status_code, 403)
 
     def test_admin_user(self):
         """Test that admin users see all applications."""
+        self.client.login(username='admin', password='admin_password')
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.status_code, 200)
 
     def test_user_with_view_all(self):
         """Test that users with the view_all permission see all applications."""
