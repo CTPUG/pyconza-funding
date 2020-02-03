@@ -3,6 +3,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.test import Client, TestCase, override_settings
+from django.utils.http import urlencode
 from django.urls import reverse
 
 from wafer.tests.api_utils import SortedResultsClient
@@ -88,4 +89,79 @@ class FundingViewTests(TestCase):
 
     def test_reject_grant(self):
         """Test that rejecting a grant works"""
+
+
+@override_settings(
+    ROOT_URLCONF='pyconza.funding.tests.urls',
+)
+class FundingE2ETest(TestCase):
+
+    def test_e2e(self):
+        """Test the complete flow"""
+        test_user = create_user('test', False)
+        client = Client()
+        form_data = {'travel_amount': 100.00,
+                     'accomodation_amount': 100.00,
+                     'food_amount': 50.00,
+                     'other_expenses': 0.00,
+                     'local_transport_amount': 0.00,
+                     'budget_description': 'Stuff',
+                     'motivation': 'Motivated',
+                     'country': 'Far, far away',
+                     'own_contribution': 50.00}
+
+        # Submit the application
+        client.login(username='test', password='test_password')
+        response = client.post('/funding/new/', form_data, follow=True)
+        # Successful form redirects us to the application
+        self.assertTrue('funding/1' in response.redirect_chain[0][0])
+        application = test_user.funding_application
+        self.assertEqual(application.total_cost(), 250)
+        self.assertEqual(application.total_requested(), 200)
+        # Edit form
+        form_data['own_contribution'] = 75.00
+        client.post('/funding/1/edit/', form_data, follow=True)
+        application.refresh_from_db()
+        self.assertEqual(application.total_cost(), 250)
+        self.assertEqual(application.total_requested(), 175)
+        # Assert that trying to accept fails
+        response = client.post('/funding/1/accept/')
+        self.assertEqual(response.status_code, 403)
+        # Likewise reject
+        response = client.post('/funding/1/reject/')
+        self.assertEqual(response.status_code, 403)
+        # Add a grant
+        application.status = 'G'
+        application.offered = 150.00
+        application.save()
+        # Test that cancel does nothing
+        response = client.post('/funding/1/reject/', {'cancel': 'cancel'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        application.refresh_from_db()
+        self.assertTrue(application.status, 'G')
+        response = client.post('/funding/1/accept/', {'cancel': 'cancel'}, follow=True)
+        self.assertEqual(response.status_code, 200)
+        application.refresh_from_db()
+        self.assertTrue(application.status, 'G')
+        response = client.post('/funding/1/accept/', follow=True)
+        self.assertEqual(response.status_code, 200)
+        application.refresh_from_db()
+        self.assertEqual(application.status, 'A')
+        response = client.post('/funding/1/reject/')
+        self.assertEqual(response.status_code, 403)
+        # Go back in time and test reject
+        application.status = 'G'
+        application.save()
+        response = client.post('/funding/1/reject/', follow=True)
+        self.assertEqual(response.status_code, 200)
+        application.refresh_from_db()
+        self.assertEqual(application.status, 'N')
+        response = client.post('/funding/1/accept/')
+        self.assertEqual(response.status_code, 403)
+
+
+
+
+
+
 

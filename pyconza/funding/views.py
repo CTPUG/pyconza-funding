@@ -15,7 +15,7 @@ from reversion.models import Version
 from wafer.users.models import UserProfile
 
 from .models import FundingApplication
-from .forms import FundingApplicationForm
+from .forms import FundingApplicationForm, FundingConfirmForm
 
 # Long descriptions of the funding choices for the template
 FUNDING_DESCRIPTIONS = {
@@ -156,31 +156,44 @@ class FundingApplicationCancel(EditOwnApplicationMixin, DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
-class FundingApplicationAccept(AcceptRejectApplicationMixin, UpdateView):
+class ConfirmView(AcceptRejectApplicationMixin, UpdateView):
+    """UpdateView with handling for a 'Cancel' button"""
     model = FundingApplication
+    form_class = FundingConfirmForm
+
+    def post(self, request, *args, **kwargs):
+        """Check if the user cancelled"""
+        if 'cancel' in request.POST:
+            # Cancel takes us back to the application with changing anything
+            self.object = self.get_object()
+            url = self.get_success_url()
+            return HttpResponseRedirect(url)
+        return super(ConfirmView, self).post(request, args, kwargs)
+
+
+class FundingApplicationAccept(ConfirmView):
     template_name = 'pyconza.funding/accept_application.html'
 
-    #@revisions.create_revision()
-    #def delete(self, request, *args, **kwargs):
-    #    """Override delete to only cancel"""
-    #    application = self.get_object()
-    #    application.status = 'C'
-    #    application.save()
-    #    revisions.set_user(self.request.user)
-    #    revisions.set_comment("Funding Application Cancelled")
-    #    return HttpResponseRedirect(self.success_url)
+    @revisions.create_revision()
+    def form_valid(self, form):
+        """Update to accept the offer"""
+        application = self.get_object()
+        application.status = 'A'
+        application.save()
+        revisions.set_user(self.request.user)
+        revisions.set_comment("Funding Application Accepted")
+        return HttpResponseRedirect(self.success_url)
 
 
-class FundingApplicationReject(AcceptRejectApplicationMixin, UpdateView):
-    model = FundingApplication
+class FundingApplicationReject(ConfirmView):
     template_name = 'pyconza.funding/reject_application.html'
 
-    #@revisions.create_revision()
-    #def delete(self, request, *args, **kwargs):
-    #    """Override delete to only cancel"""
-    #    application = self.get_object()
-    #    application.status = 'C'
-    #    application.save()
-    #    revisions.set_user(self.request.user)
-    #    revisions.set_comment("Funding Application Cancelled")
-    #    return HttpResponseRedirect(self.success_url)
+    @revisions.create_revision()
+    def form_valid(self, form):
+        """Update to reject the offer"""
+        application = self.get_object()
+        application.status = 'N'
+        application.save()
+        revisions.set_user(self.request.user)
+        revisions.set_comment("Funding Application Rejected")
+        return HttpResponseRedirect(self.success_url)

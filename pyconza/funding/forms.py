@@ -68,3 +68,12 @@ class FundingApplicationForm(forms.ModelForm):
         else:
             self.helper.add_input(submit_button)
 
+
+class FundingConfirmForm(object):
+    """Empty form so we can handle accept / reject decisions"""
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def is_valid(self):
+        return True
