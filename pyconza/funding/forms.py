@@ -41,7 +41,7 @@ class FundingApplicationForm(forms.ModelForm):
         # Likewise, we add a css_class to the own_contribution field for javascript
         # calculation of the total_requested
         self.helper.layout = Layout(
-            'motivation'
+            'motivation',
             'country',
             Fieldset(
                 'Your budget',
