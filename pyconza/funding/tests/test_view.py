@@ -42,6 +42,8 @@ class FundingViewTests(TestCase):
         self.admin_user = create_user('admin', True)
         self.no_app_user = create_user('no application', False)
         self.def_app = create_application(self.test_user, 'U')
+        perm = Permission.objects.get(codename='view_all_applications')
+        self.perm_user.user_permissions.add(perm)
         self.client = Client()
 
     def test_not_logged_in(self):
@@ -185,10 +187,3 @@ class FundingE2ETest(TestCase):
         self.assertEqual(application.status, 'N')
         response = client.post('/funding/1/accept/')
         self.assertEqual(response.status_code, 403)
-
-
-
-
-
-
-
