@@ -57,38 +57,65 @@ class FundingViewTests(TestCase):
 
     def test_user_with_view_all(self):
         """Test that users with the view_all permission see all applications."""
+        self.client.login(username='perm_user', password='perm_user_password')
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.status_code, 200)
 
     def test_user_view_self(self):
         """Test that a user can see their own application"""
+        self.client.login(username='test', password='test_password')
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.status_code, 200)
 
     def test_own_submitted(self):
-        """Test that a user can edit / withdraw their application while its submitted"""
+        """Test that a user can edit / withdraw their application while its submitted,
+           but cannot accept it"""
+        self.client.login(username='test', password='test_password')
+        self.def_app.status = 'S'
+        self.def_app.save()
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.context_data['can_edit'], True)
+        self.assertEqual(response.context_data['can_accept'], False)
 
     def test_own_under_consideration(self):
-        """Test that a user cannot edi or withdraw their application once it's 'Under Consideration'"""
+        """Test that a user cannot edit, withdraw or accept / rehect their application
+           once it's 'Under Consideration'"""
+        self.client.login(username='test', password='test_password')
+        self.def_app.status = 'U'
+        self.def_app.save()
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.context_data['can_edit'], False)
+        self.assertEqual(response.context_data['can_accept'], False)
 
     def test_own_granted(self):
-        """Test that a user cannot edit or withdraw their application once it's been granted"""
+        """Test that a user cannot edit or withdraw their application once it's been granted,
+           but can accept it"""
+        self.client.login(username='test', password='test_password')
+        self.def_app.status = 'G'
+        self.def_app.save()
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.context_data['can_edit'], False)
+        self.assertEqual(response.context_data['can_accept'], True)
 
     def test_own_accepted(self):
-        """Test that a user cannot edit or withdraw their application once it's been accepted"""
+        """Test that a user cannot edit, withdraw or accept / rehect their application
+           been accepted"""
+        self.client.login(username='test', password='test_password')
+        self.def_app.status = 'A'
+        self.def_app.save()
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.context_data['can_edit'], False)
+        self.assertEqual(response.context_data['can_accept'], False)
 
     def test_own_rejected(self):
-        """Test that a user cannot edit or withdraw their application once it's been rejected"""
-
-    def test_accept_reject_option(self):
-        """Test that the accept / reject option is displayed after a request has been granted."""
-        # Test submitted state
-        # Test under consideration state
-        # Test granted state
-        # Test accepted state
-        # Test rejected state
-
-    def test_accept_grant(self):
-        """Test that accepting a grant works"""
-
-    def test_reject_grant(self):
-        """Test that rejecting a grant works"""
+        """Test that a user cannot edit, withdraw or accept/reject their application
+           once it's been rejected"""
+        self.client.login(username='test', password='test_password')
+        self.def_app.status = 'N'
+        self.def_app.save()
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.context_data['can_edit'], False)
+        self.assertEqual(response.context_data['can_accept'], False)
 
 
 @override_settings(
