@@ -182,7 +182,7 @@ class FundingApplicationAccept(ConfirmView):
         application.save()
         revisions.set_user(self.request.user)
         revisions.set_comment("Funding Application Accepted")
-        return HttpResponseRedirect(self.success_url)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class FundingApplicationReject(ConfirmView):
@@ -196,4 +196,4 @@ class FundingApplicationReject(ConfirmView):
         application.save()
         revisions.set_user(self.request.user)
         revisions.set_comment("Funding Application Rejected")
-        return HttpResponseRedirect(self.success_url)
+        return HttpResponseRedirect(self.get_success_url())
