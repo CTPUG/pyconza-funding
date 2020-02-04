@@ -1,16 +1,19 @@
-{% extends 'wafer/base.html' %}
+{% extends 'wafer/base_form.html' %}
 {% load i18n %}
 {% block content %}
 <section class="wafer wafer-funding-reject">
   <h1>{% trans "Reject Offer ?" %}</h1>
-  <p>{% trans Are you certain you want to reject this offer ? %}</p>
+  <p>{% trans "Are you certain you want to reject this offer ?" %}</p>
   <p>{% blocktrans %}
   Rejecting this offer will be considered a final decision, and you will not be
   offered further support.
   {% endblocktrans %}</p>
-  <p>{% trans Requested funding %} {{ requested }}</p>
-  <p>{% trans Offered funding %} {{ offered }}</p>
-  <button class="btn-warning d-print-none"type="submit" value="Submit">Reject</button>
-  <button class="float-right btn d-print-none" type="submit" value="Cancel">Cancel</button>
+  <form method="post">
+    {% csrf_token %}
+    <p>{% trans "Requested funding:" %} {{ requested }}</p>
+    <p>{% trans "Offered funding:" %} {{ offered }}</p>
+    <button class="btn-warning d-print-none"type="submit" value="Submit">Reject</button>
+    <button class="float-right btn d-print-none" type="submit" value="Cancel">Cancel</button>
+  </form>
 </section>
 {% endblock %}

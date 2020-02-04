@@ -36,7 +36,7 @@
     {% if can_accept %}
       <span><a href="{% url 'funding_application_accept' object.pk %}"
             class="btn btn-secondary btn-lg d-print-none">{% trans "Accept" %}</a>
-         <a href="% url 'funding_application_reject'  object.pk %}"
+         <a href="{% url 'funding_application_reject'  object.pk %}"
             class="float-right btn btn-danger btn-lg d-print-none">{% trans "Reject" %}</a>
       </span>
     {% endif %}

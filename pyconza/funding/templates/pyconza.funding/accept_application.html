@@ -1,17 +1,20 @@
-{% extends 'wafer/base.html' %}
+{% extends 'wafer/base_form.html' %}
 {% load i18n %}
 {% block content %}
 <section class="wafer wafer-funding-accept">
   <h1>{% trans "Accept Offer ?" %}</h1>
-  <p>{% trans Are you certain you want to accept this offer ? %}</p>
+  <p>{% trans "Are you certain you want to accept this offer ?" %}</p>
   <p>{% blocktrans %}
   Accepting this offer will be considered a final decision that you are happy with
   the offer and will attend the conference. If you have concerns about the offer,
   please discuss them with the funding committee before accepting the offer.
   {% endblocktrans %}</p>
-  <p>{% trans Requested funding %} {{ requested }}</p>
-  <p>{% trans Offered funding %} {{ offered }}</p>
-  <button class="btn-primary d-print-none"type="submit" value="Submit">Accept</button>
-  <button class="float-right btn d-print-none" type="submit" value="Cancel">Cancel</button>
+  <form method="post">
+    {% csrf_token %}
+    <p>{% trans "Requested funding" %} {{ requested }}</p>
+    <p>{% trans "Offered funding" %} {{ offered }}</p>
+    <button class="btn-primary d-print-none"type="submit" value="Submit">Accept</button>
+    <button class="float-right btn d-print-none" type="submit" value="Cancel">Cancel</button>
+  </form>
 </section>
 {% endblock %}
