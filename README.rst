@@ -5,6 +5,13 @@ Intended to integrate with `wafer`_.
 
 .. _wafer: https://github.com/CTPUG/wafer
 
+|funding-ci-badge|
+
+.. |funding-ci-badge| image:: https://travis-ci.org/CTPUG/pyconza-funding.svg?branch=master
+    :alt: Travis CI build status
+    :scale: 100%
+    :target: https://travis-ci.org/CTPUG/pyconza-funding
+
 About
 =====
 
