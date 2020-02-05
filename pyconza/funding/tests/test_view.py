@@ -143,47 +143,49 @@ class FundingE2ETest(TestCase):
         client.login(username='test', password='test_password')
         response = client.post('/funding/new/', form_data, follow=True)
         # Successful form redirects us to the application
-        self.assertTrue('funding/1' in response.redirect_chain[0][0])
+        self.assertTrue(test_user.funding_application is not None)
         application = test_user.funding_application
+        funding_url = '/funding/%d/' % application.pk
+        self.assertTrue(funding_url in response.redirect_chain[0][0])
         self.assertEqual(application.total_cost(), 250)
         self.assertEqual(application.total_requested(), 200)
         # Edit form
         form_data['own_contribution'] = 75.00
-        client.post('/funding/1/edit/', form_data, follow=True)
+        client.post(funding_url + 'edit/', form_data, follow=True)
         application.refresh_from_db()
         self.assertEqual(application.total_cost(), 250)
         self.assertEqual(application.total_requested(), 175)
         # Assert that trying to accept fails
-        response = client.post('/funding/1/accept/')
+        response = client.post(funding_url + 'accept/')
         self.assertEqual(response.status_code, 403)
         # Likewise reject
-        response = client.post('/funding/1/reject/')
+        response = client.post(funding_url + 'reject/')
         self.assertEqual(response.status_code, 403)
         # Add a grant
         application.status = 'G'
         application.offered = 150.00
         application.save()
         # Test that cancel does nothing
-        response = client.post('/funding/1/reject/', {'cancel': 'cancel'}, follow=True)
+        response = client.post(funding_url + 'reject/', {'cancel': 'cancel'}, follow=True)
         self.assertEqual(response.status_code, 200)
         application.refresh_from_db()
         self.assertTrue(application.status, 'G')
-        response = client.post('/funding/1/accept/', {'cancel': 'cancel'}, follow=True)
+        response = client.post(funding_url + 'accept/', {'cancel': 'cancel'}, follow=True)
         self.assertEqual(response.status_code, 200)
         application.refresh_from_db()
         self.assertTrue(application.status, 'G')
-        response = client.post('/funding/1/accept/', follow=True)
+        response = client.post(funding_url + 'accept/', follow=True)
         self.assertEqual(response.status_code, 200)
         application.refresh_from_db()
         self.assertEqual(application.status, 'A')
-        response = client.post('/funding/1/reject/')
+        response = client.post(funding_url + 'reject/')
         self.assertEqual(response.status_code, 403)
         # Go back in time and test reject
         application.status = 'G'
         application.save()
-        response = client.post('/funding/1/reject/', follow=True)
+        response = client.post(funding_url + 'reject/', follow=True)
         self.assertEqual(response.status_code, 200)
         application.refresh_from_db()
         self.assertEqual(application.status, 'N')
-        response = client.post('/funding/1/accept/')
+        response = client.post(funding_url + 'accept/')
         self.assertEqual(response.status_code, 403)
