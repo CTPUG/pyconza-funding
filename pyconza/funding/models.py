@@ -123,8 +123,10 @@ class FundingApplication(models.Model):
     def can_accept(self, user):
         """Can the user accept or reject this application?"""
         if user.has_perm('funding.make_application_decisions'):
-            # Funding manager can update things later, if required
-            return True
+            # Funding manager can override / update decisions, if required
+            # But we still need to have had a offer made
+            if self.status in ['G', 'A', 'N']:
+                return True
         # Applicants can only decide on granted applications
         if self.status == 'G':
             if self.applicant == user:
