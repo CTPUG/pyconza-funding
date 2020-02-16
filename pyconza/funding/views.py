@@ -20,7 +20,8 @@ from .forms import FundingApplicationForm, FundingConfirmForm
 # Long descriptions of the funding choices for the template
 FUNDING_DESCRIPTIONS = {
     'S': _('This funding request has been submitted'),
-    'U': _('This request has been finalised and is under consideration by the committee.'),
+    'U': _('This request is under consideration by the committee.'),
+    'F': _('This request has been finalised and undergoing final review by the committee.'),
     'G': _('This funding request has been granted and is waiting for your decision on accepting the offer'),
     'A': _('This funding offer has been accepted'),
     'R': _('The committee has not granted this funding request'),

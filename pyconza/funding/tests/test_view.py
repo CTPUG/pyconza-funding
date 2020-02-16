@@ -70,8 +70,8 @@ class FundingViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_own_submitted(self):
-        """Test that a user can edit / withdraw their application while its submitted,
-           but cannot accept it"""
+        """Test that a user can edit / withdraw their application while it's
+           submitted, but cannot accept it"""
         self.client.login(username='test', password='test_password')
         self.def_app.status = 'S'
         self.def_app.save()
@@ -80,10 +80,20 @@ class FundingViewTests(TestCase):
         self.assertEqual(response.context_data['can_accept'], False)
 
     def test_own_under_consideration(self):
-        """Test that a user cannot edit, withdraw or accept / rehect their application
-           once it's 'Under Consideration'"""
+        """Test that a user can edit / withdraw their application while it's
+           under consideratoon, but cannot accept it"""
         self.client.login(username='test', password='test_password')
         self.def_app.status = 'U'
+        self.def_app.save()
+        response = self.client.get('/funding/%d/' % self.def_app.pk)
+        self.assertEqual(response.context_data['can_edit'], True)
+        self.assertEqual(response.context_data['can_accept'], False)
+
+    def test_own_final_review(self):
+        """Test that a user cannot edit, withdraw or accept / rehect their application
+           once it's 'Final Review'"""
+        self.client.login(username='test', password='test_password')
+        self.def_app.status = 'F'
         self.def_app.save()
         response = self.client.get('/funding/%d/' % self.def_app.pk)
         self.assertEqual(response.context_data['can_edit'], False)

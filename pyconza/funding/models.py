@@ -24,6 +24,7 @@ class FundingApplication(models.Model):
     STATUS_CHOICES = (
         ('S', _('Submitted')),
         ('U', _('Under Consideration')),
+        ('F', _('Final Review')),
         ('G', _('Request Granted')),
         ('A', _('Offer accepted')),
         ('R', _('Funding not granted')),
@@ -102,8 +103,8 @@ class FundingApplication(models.Model):
         if user.has_perm('funding.make_application_decisions'):
             # Funding manager can update things later, if required
             return True
-        # Applicants can only edit the application while it's in the initial submission state
-        if self.status == 'S':
+        # Applicants can only edit the application before the final review step
+        if self.status in ('S', 'U'):
             if self.applicant == user:
                 return True
         return False
