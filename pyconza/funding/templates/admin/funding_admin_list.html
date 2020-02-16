@@ -1,0 +1,23 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+{# This plugs our extra information into the end of the content block #}
+{% block content %}
+  {{ block.super }}
+  <h2>Totals</h2>
+  <table>
+  </table>
+  <div class="validation_info">
+  {% if errors %}
+    <div name="errors">
+       <h2>{% trans "Errors in the applications" %}</h2>
+       {% block displayerrors %}
+         <ul>
+         {% for appdata in errors %}
+           <li>{% trans "Application " %}{{ appdata.0.pk }} - {{ appdata.1 }}</li>
+         {% endfor %}
+         </ul>
+       {% endblock %}
+    </div>
+  {% endif %}
+  </div>
+{% endblock %}
