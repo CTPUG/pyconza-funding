@@ -5,6 +5,24 @@
   {{ block.super }}
   <h2>Totals</h2>
   <table>
+     <tr>
+        <th>{% trans "Category" %}</th><th>{% trans Value %}</th>
+     </tr>
+     <tr>
+        <td>{% trans "Offer made, but no decision" %}</td><td>{{ totals.not_decided }}</td>
+     </tr>
+     <tr>
+        <td>{% trans "Offer Accepted" %}</td><td>{{ totals.accepted }}</td>
+     </tr>
+     <tr>
+        <td>{% trans "Total cost" %}</td><td>{{ totals.total_cost }}</td>
+     </tr>
+     <tr>
+        <td>{% trans "Offer Not Accepted" %}</td><td>{{ totals.not_accepted }}</td>
+     </tr>
+     <tr>
+        <td>{% trans "Total" %}</td><td>{{ totals.total }}</td>
+     </tr>
   </table>
   <div class="validation_info">
   {% if errors %}

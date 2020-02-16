@@ -26,6 +26,27 @@ def check_app_status(all_applications):
     return errors
 
 
+def calc_totals(all_applications):
+    totals = {
+        'total': 0,
+        'not_accepted': 0,
+        'accepted': 0,
+        'not_decided': 0,
+        'total_cost': 0,
+    }
+    for app in all_applications:
+        totals['total'] += app.offered
+        if app.status == 'N':
+            totals['not_accepted'] += app.offered
+        elif app.status == 'A':
+            totals['accepted'] += app.offered
+
+    # Inferred values
+    totals['not_decided'] = totals['total'] - totals['accepted']  - totals['not_accepted']
+    totals['total_cost'] = totals['accepted'] + totals['not_decided']
+    return totals
+
+
 VALIDATORS = [check_app_status]
 
 
@@ -46,6 +67,8 @@ class FundingApplicationAdmin(CompareVersionAdmin):
             wrong_applications.extend(validator(all_applications))
         wrong_applications.sort(key=lambda x: x[0].pk)
         extra_context['errors'] = wrong_applications
+        # Calculate relevant totals
+        extra_context['totals'] = calc_totals(all_applications)
         return super(FundingApplicationAdmin, self).changelist_view(request,
                                                                     extra_context)
 
