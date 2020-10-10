@@ -22,7 +22,7 @@ conferences.
 This is intended to automate the data related parts of the application - gathering
 budgets, making offers and recording delegate's decisions on whether to accept funding
 offers. It is not intended to handle the decision making process, nor does it handle
-the communicatation between applicants and the funding committee.
+the communication between applicants and the funding committee.
 
 Installing
 ==========
