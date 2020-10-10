@@ -44,7 +44,7 @@ communicate with the applicant and resolve them. During this period, the applica
 to edit the application (to tweak figures, expand on motivation, etc.). They can also cancel
 the application at this point,
 
-Once the funding commitee is happy with the application, the status should be set to 'Final Review'.
+Once the funding committee is happy with the application, the status should be set to 'Final Review'.
 If, after review, the decision is to not award the funding, the application should be set to
 'Funding not granted', otherwise an offer should be specified and the status set to 'Request Granted'.
 
