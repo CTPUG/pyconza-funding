@@ -11,7 +11,6 @@ from django.utils.translation import ugettext as _
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Field, Submit, HTML
-from easy_select2.widgets import Select2Multiple
 from markitup.widgets import MarkItUpWidget
 
 from .models import FundingApplication
